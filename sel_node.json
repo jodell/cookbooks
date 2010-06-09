@@ -1,0 +1,3 @@
+{
+  "recipes": [ "xvfb", "selenium-rc" ]
+}

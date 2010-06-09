@@ -1,17 +1,27 @@
 
 require 'rake'
 
-task :default => :install
+task :default => :'cook:default'
 
-desc 'default cookbook to install via chef-solo'
-task :install do
-  sh 'chef-solo -c test.rb -j test.json'
+task :sel => :'cook:selenium'
+
+namespace :cook do
+  desc 'default cookbook to install via chef-solo'
+  task :default do
+    sh 'chef-solo -c solo.rb -j solo.json'
+  end
+
+  desc 'cookbook for a headless selenium-rc node'
+  task :selenium do
+    sh 'chef-solo -c sel_node.rb -j sel_node.json'
+  end
+
 end
 
 @os = 'debian' # space separated string
 @maintainer = "Jeffrey ODell"
 @maintainer_email = "jeffrey.odell@gmail.com"
-@description = "basic debian lenny bootstrapping"
+@description = "<desc>"
 
 
 namespace :rec do
@@ -27,7 +37,7 @@ description "#{@description}"
 version "0.1"
 
 %w{ #{@os} }.each do |os|
-    supports os
+  supports os
 end
 EOB
     File.open("#{@name}/metadata.rb", 'w') do |f|
