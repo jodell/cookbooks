@@ -1,9 +1,7 @@
 
+# Chef Cookbooks
 
-== Chef Cookbooks
+For personal use, has a debian/ubuntu bias.
 
-For personal use
-
-Some recipes might be public elsewhere
 
 
