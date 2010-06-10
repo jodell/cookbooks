@@ -22,8 +22,21 @@ template '/etc/modules' do
   mode 0644
   owner "root"
   group "root"
-  variables({
+  variables(
     :max_loop => node[:xen][:modules][:max_loop]
-  })
+  )
 end
+
+directory '/home/xen/boot/kernel' do
+  recursive true
+  action :create
+end
+
+current_user = `env | grep SUDO_USER`.chomp.split(/=/).last
+
+group 'xen' do
+  members [ current_user ]
+end
+
+
 
