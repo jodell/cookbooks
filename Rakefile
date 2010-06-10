@@ -1,9 +1,15 @@
-
 require 'rake'
 
 task :default => :'cook:default'
-
 task :sel => :'cook:selenium'
+
+# FIXME
+@version = '0.1'
+
+task :pkg do
+  books = FileList['*'].reject { |f| !File.directory?(f) || f.match(/pkg/) }
+  sh "tar czvf pkg/cookbooks-#{@version}.tar.gz #{books * ' '}"
+end
 
 namespace :cook do
   desc 'default cookbook to install via chef-solo'
@@ -15,7 +21,6 @@ namespace :cook do
   task :selenium do
     sh 'chef-solo -c sel_node.rb -j sel_node.json'
   end
-
 end
 
 @os = 'debian' # space separated string
@@ -23,9 +28,7 @@ end
 @maintainer_email = "jeffrey.odell@gmail.com"
 @description = "<desc>"
 
-
 namespace :rec do
-
   desc 'generate a new recipe dir with $name'
   task :new do
     raise "Expected $name!" unless @name = ENV['name']
@@ -45,5 +48,6 @@ EOB
     end
     sh "touch #{@name}/recipes/default.rb"
   end
-
 end
+
+
