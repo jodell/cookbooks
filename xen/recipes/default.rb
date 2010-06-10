@@ -27,16 +27,22 @@ template '/etc/modules' do
   )
 end
 
-directory '/home/xen/boot/kernel' do
-  recursive true
-  action :create
-end
-
 current_user = `env | grep SUDO_USER`.chomp.split(/=/).last
 
 group 'xen' do
   members [ current_user ]
 end
 
+group 'adm' do
+  members [ current_user ]
+end
 
+directory '/home/xen' do
+  user 'xen'
+  group 'xen'
+end
 
+directory '/home/xen/boot/kernel' do
+  recursive true
+  action :create
+end
