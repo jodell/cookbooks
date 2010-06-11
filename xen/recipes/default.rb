@@ -38,11 +38,20 @@ group 'adm' do
 end
 
 directory '/home/xen' do
-  user 'xen'
+#  owner 'xen'
+  mode 2775
   group 'xen'
 end
 
 directory '/home/xen/boot/kernel' do
   recursive true
   action :create
+end
+
+directory '/home/xen/default' do
+  action :create
+end
+
+template '/home/xen/default/default.cfg' do
+  source 'default.cfg' # FIXME
 end

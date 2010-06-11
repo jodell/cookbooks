@@ -1,0 +1,57 @@
+#
+#  Templated Configuration file for a Golden-based Lenny Xen instance
+#
+# -jodell 20090925
+
+#
+#  Kernel + memory size
+#
+kernel  = <%= @kernel_path %>
+ramdisk = <%= @ramdisk_path %>
+
+
+memory  = <%= @ram %>
+
+#
+# Number of CPUs
+#
+vcpus = <%= @cpus %>
+
+#
+#  Disk device(s).
+#
+root    = '/dev/sda1 ro'
+
+# The disk order is important here:
+# The golden lenny image has an /etc/fstab that assumes the following info:
+#
+disk    = [ 
+              <%= @disks.each do |disk| %>
+                'file:<%= disk[:path] %>,<%= disk[:device] %>,w', 
+              <%= end %>
+          ]
+
+#
+#  Hostname
+#  NOT A REAL HOSTNAME
+#
+name    = 'default'
+
+#
+#  Networking
+#
+#  xen bridge defaults to xenbr0
+vif  =    [ 
+            <%= @vif %>
+          ]
+
+#
+#  Behaviour
+#
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+
+# Static IP configuration
+# NOT A REAL IP
+extra="<%= @ip[:interface] %>=<%= @ip[:ip] %>:<%= @ip[:netmask] %>:<%= @ip[:gateway] %> fqdn=<%= @fqdn %>"
