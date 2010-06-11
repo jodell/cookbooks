@@ -38,8 +38,7 @@ group 'adm' do
 end
 
 directory '/home/xen' do
-#  owner 'xen'
-  mode 2775
+  mode 1775
   group 'xen'
 end
 
@@ -49,6 +48,10 @@ directory '/home/xen/boot/kernel' do
 end
 
 directory '/home/xen/default' do
+  action :create
+end
+
+directory '/etc/xen/auto' do
   action :create
 end
 
