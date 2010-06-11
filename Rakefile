@@ -18,8 +18,8 @@ task :pre do
     cmd = [
       'cd /tmp',
       'wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz',
-      'tar zxf rubygems-1.3.6.tgz',
-      'cd rubygems-1.3.6',
+      'tar zxf rubygems-1.3.7.tgz',
+      'cd rubygems-1.3.7',
       'sudo ruby setup.rb',
       'sudo gem update --system',
     ]
