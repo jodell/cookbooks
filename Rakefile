@@ -15,15 +15,15 @@ desc 'Ghetto chef bootstrapping'
 task :pre do
   unless File.exists?('/var/chef/cookbooks')
     sh 'sudo apt-get install -y -q rubygems ruby ruby-dev libopenssl-ruby1.8 build-essential vim tree htop git-core'
-    cmd = <<-EoC
-    cd /tmp
-    wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
-    tar zxf rubygems-1.3.6.tgz
-    cd rubygems-1.3.6
-    sudo ruby setup.rb
-    sudo gem update --system
-  EoC
-    sh cmd.split * ';'
+    cmd = [
+      'cd /tmp',
+      'wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz',
+      'tar zxf rubygems-1.3.6.tgz',
+      'cd rubygems-1.3.6',
+      'sudo ruby setup.rb',
+      'sudo gem update --system',
+    ]
+    sh cmd * ';'
     sh 'sudo gem install chef'
     sh 'sudo mkdir -p /var/chef'
     sh 'cd /var/chef; git clone git://github.com/jodell/cookbooks.git'
