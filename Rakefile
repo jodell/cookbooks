@@ -3,17 +3,23 @@ require 'rake'
 task :default => :'cook:default'
 task :sel => :'cook:selenium'
 
-# FIXME
-@version = '0.1'
+@version = IO.readlines('VERSION').first.chomp
 
 task :pkg do
   books = FileList['*'].reject { |f| !File.directory?(f) || f.match(/pkg/) }
+  @version = (@version.to_f + 0.1).to_s
   sh "tar czvf pkg/cookbooks-#{@version}.tar.gz #{books * ' '}"
+  File.open('VERSION', 'w') { |f| f << "#{@version}\n" }
 end
 
-desc 'Ghetto chef bootstrapping'
+task :version do
+  puts @version
+end
+
+desc 'Ghetto chef bootstrapping, see bin/lenny-bootstrap.sh'
 task :pre do
-  unless File.exists?('/var/chef/cookbooks')
+  # Replaced by bin/bootstrap-lenny.sh
+  unless File.exists?('/var/chef/cookbooks') # simplistic check
     sh 'sudo apt-get install -y -q rubygems ruby ruby-dev libopenssl-ruby1.8 build-essential vim tree htop git-core'
     cmd = [
       'cd /tmp',
