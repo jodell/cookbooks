@@ -25,9 +25,9 @@ root    = '/dev/sda1 ro'
 # The disk order is important here:
 # The golden lenny image has an /etc/fstab that assumes the following info:
 #
-disk    = [ 
+disk    = [
               <%= @disks.each do |disk| %>
-                'file:<%= disk[:path] %>,<%= disk[:device] %>,w', 
+                'file:<%= disk[:path] %>,<%= disk[:device] %>,w',
               <%= end %>
           ]
 
@@ -41,7 +41,7 @@ name    = 'default'
 #  Networking
 #
 #  xen bridge defaults to xenbr0
-vif  =    [ 
+vif  =    [
             <%= @vif %>
           ]
 

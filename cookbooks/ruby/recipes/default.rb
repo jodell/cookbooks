@@ -8,4 +8,3 @@ pkgs.each do |pkg|
     action :install
   end
 end
-  

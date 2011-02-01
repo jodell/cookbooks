@@ -10,4 +10,3 @@ For personal use, has a debian/ubuntu bias.
 * ruby - ruby extras
 * p4 - perforce binary setup
 * lenny_bootstrap - basic debian lenny setup
-
