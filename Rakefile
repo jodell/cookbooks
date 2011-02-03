@@ -10,7 +10,6 @@ end
 
 desc 'Ghetto chef bootstrapping, see bin/bootstrap.sh'
 task :bootstrap do
-  # Replaced by bin/bootstrap-lenny.sh
   if `which chef-solo`.empty? # simplistic check
     sh pwd + '/bin/bootstrap.sh'
   end
@@ -19,7 +18,7 @@ end
 desc 'Run a role or recipe from this repo'
 task :run, :role_or_recipe, :needs => :bootstrap do |t, args|
   role = args[:role_or_recipe].match(/\.json$/) ? args[:role_or_recipe] : (args[:role_or_recipe] + '.json')
-  if File.exist? role
+  if File.exist? "#{pwd}/roles/#{role}"
     run = "#{pwd}/roles/#{role}"
   elsif File.directory? "#{pwd}/cookbooks/#{args[:role_or_recipe]}"
     File.open("/tmp/#{args[:role_or_recipe]}.json", 'w') do |f|
