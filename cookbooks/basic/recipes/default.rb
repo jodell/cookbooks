@@ -1,12 +1,19 @@
+%w(
+openssh-server
+sudo
+vim
+htop
+iotop
+rsync
+curl
+git-core
+screen
+time
+dnsutils
+).each { |p| package p }
 
-basic = %w[ openssh-server sudo vim htop rsync curl git-core ]
-
-basic.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
-
-directory '~/git' do
-  not_if 'test -d ~/git'
+execute 'default editor' do
+  command 'update-alternatives --set editor /usr/bin/vim.basic'
+  only_if do platform?('ubuntu', 'debian') end
+  not_if %{update-alternatives --query editor | grep "Value: /usr/bin/vim.basic"}
 end

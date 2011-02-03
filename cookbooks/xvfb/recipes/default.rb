@@ -1,9 +1,7 @@
-
-
-pkgs = %w( xvfb imagemagick )
-
-pkgs.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
+%w(
+xvfb
+xfonts-100dpi
+xfonts-75dpi
+xfonts-scalable
+xfonts-cyrillic
+).each { |p| package p }

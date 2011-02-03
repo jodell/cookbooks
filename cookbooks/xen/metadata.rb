@@ -6,7 +6,7 @@ version "0.1"
 depends "lenny_bootstrap"
 
 %w{ debian }.each do |os|
-    supports os
+  supports os
 end
 
 attribute 'xen/modules/max_loop',

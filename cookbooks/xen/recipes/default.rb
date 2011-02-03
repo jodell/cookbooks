@@ -1,21 +1,14 @@
+include_recipe 'basic'
 
-include_recipe 'lenny_bootstrap'
-
-xen_pkgs = %w[
-  xen-hypervisor-3.2-1-amd64
-  xen-linux-system-2.6.26-1-xen-amd64
-  xen-utils-3.2-1
-  xenstore-utils
-  xenwatch
-  xen-shell
-  xen-tools
-]
-
-xen_pkgs.each do |pkg|
-  package pkg do
-    action :install
-  end
-end
+%w(
+xen-hypervisor-3.2-1-amd64
+xen-linux-system-2.6.26-1-xen-amd64
+xen-utils-3.2-1
+xenstore-utils
+xenwatch
+xen-shell
+xen-tools
+).each { |p| package p }
 
 template '/etc/modules' do
   source 'modules.erb'
@@ -44,16 +37,10 @@ end
 
 directory '/home/xen/boot/kernel' do
   recursive true
-  action :create
 end
 
-directory '/home/xen/default' do
-  action :create
-end
-
-directory '/etc/xen/auto' do
-  action :create
-end
+directory '/home/xen/default'
+directory '/etc/xen/auto'
 
 template '/home/xen/default/default.cfg' do
   source 'default.cfg' # FIXME

@@ -1,3 +1,7 @@
 {
-  "recipes": [ "xvfb", "selenium-rc" ]
+  "recipes": [
+    "basic",
+    "xvfb",
+    "selenium-rc"
+  ]
 }

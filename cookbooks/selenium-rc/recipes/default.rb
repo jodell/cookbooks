@@ -1,5 +1,5 @@
-
-# Resuse from opscode
-# include_recipe 'java'
-
-include_recipe 'ruby'
+%w(
+default-jre-headless
+firefox
+imagemagick
+).each { |p| package p }
