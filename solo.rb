@@ -1,2 +1,2 @@
-path "/home/jodell/git/cookbooks"
-cookbook_path "/home/jodell/git/cookbooks"
+path File.expand_path(File.dirname(__FILE__))
+cookbook_path "#{File.expand_path(File.dirname(__FILE__))}/cookbooks"

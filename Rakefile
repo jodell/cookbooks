@@ -1,81 +1,62 @@
-require 'rake'
+require 'json'
 
-task :default => :'cook:default'
-task :sel => :'cook:selenium'
-
-@version = IO.readlines('VERSION').first.chomp
-
-task :pkg do
-  books = FileList['*'].reject { |f| !File.directory?(f) || f.match(/pkg/) }
-  @version = (@version.to_f + 0.1).to_s
-  sh "tar czvf pkg/cookbooks-#{@version}.tar.gz #{books * ' '}"
-  File.open('VERSION', 'w') { |f| f << "#{@version}\n" }
+def pwd
+  File.expand_path(File.dirname(__FILE__))
 end
 
-task :version do
-  puts @version
+def local_config
+  pwd + '/solo.rb'
 end
 
-desc 'Ghetto chef bootstrapping, see bin/lenny-bootstrap.sh'
-task :pre do
+desc 'Ghetto chef bootstrapping, see bin/bootstrap.sh'
+task :bootstrap do
   # Replaced by bin/bootstrap-lenny.sh
-  unless File.exists?('/var/chef/cookbooks') # simplistic check
-    sh 'sudo apt-get install -y -q rubygems ruby ruby-dev libopenssl-ruby1.8 build-essential vim tree htop git-core'
-    cmd = [
-      'cd /tmp',
-      'wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz',
-      'tar zxf rubygems-1.3.7.tgz',
-      'cd rubygems-1.3.7',
-      'sudo ruby setup.rb',
-      'sudo gem update --system',
-    ]
-    sh cmd * ';'
-    sh 'sudo gem install chef'
-    sh 'sudo mkdir -p /var/chef'
-    sh 'cd /var/chef; git clone git://github.com/jodell/cookbooks.git'
+  if `which chef-solo`.empty? # simplistic check
+    sh pwd + '/bin/bootstrap.sh'
   end
 end
 
-task :xen => :pre do
-  sh 'sudo chef-solo -j /var/chef/cookbooks/xen.json'
+desc 'Run a role or recipe from this repo'
+task :run, :role_or_recipe, :needs => :bootstrap do |t, args|
+  role = args[:role_or_recipe].match(/\.json$/) ? args[:role_or_recipe] : (args[:role_or_recipe] + '.json')
+  if File.exist? role
+    run = "#{pwd}/roles/#{role}"
+  elsif File.directory? "#{pwd}/cookbooks/#{args[:role_or_recipe]}"
+    File.open("/tmp/#{args[:role_or_recipe]}.json", 'w') do |f|
+      f << { "recipes" => args[:role_or_recipe] }.to_json
+    end
+    run = "/tmp/#{args[:role_or_recipe]}.json"
+  else
+    abort "No cookbook or role found!"
+  end
+  sh "chef-solo -c #{local_config} -j #{run}"
 end
 
-namespace :cook do
-  desc 'default cookbook to install via chef-solo'
-  task :default do
-    sh 'chef-solo -c solo.rb -j solo.json'
-  end
-
-  desc 'cookbook for a headless selenium-rc node'
-  task :selenium do
-    sh 'chef-solo -c sel_node.rb -j sel_node.json'
-  end
+desc 'Package these cookbooks'
+task :pkg do
+  version = (File.read('VERSION').chomp.to_f + 0.1).to_s
+  sh "cd cookbooks && tar czvf ../pkg/cookbooks-#{version}.tar.gz *"
+  File.open('VERSION', 'w') { |f| f << "#{version}" }
 end
 
-@os = 'debian' # space separated string
-@maintainer = "Jeffrey ODell"
-@maintainer_email = "jeffrey.odell@gmail.com"
-@description = "<desc>"
+desc 'Generate a new templated recipe'
+task :generate, :name do |t, args|
+  os          = ENV['os']     || 'debian' # space separated string
+  maintainer  = ENV['author'] || "Jeffrey ODell"
+  email       = ENV['email']  || "jeffrey.odell@gmail.com"
+  description = ENV['desc']   || "<desc>"
 
-namespace :rec do
-  desc 'generate a new recipe dir with $name'
-  task :new do
-    raise "Expected $name!" unless @name = ENV['name']
-    sh "mkdir -p #{@name}/recipes"
-    metadata = <<-EOB
-maintainer "#{@maintainer}"
-maintainer_email "#{@maintainer_email}"
-description "#{@description}"
+  sh "mkdir -p cookbooks/#{args[:name]}/recipes && touch cookbooks/#{args[:name]}/recipes/default.rb"
+  metadata =  File.open("cookbooks/#{args[:name]}/metadata.rb", 'w') do |f|
+    f <<-EOB
+maintainer "#{maintainer}"
+maintainer_email "#{email}"
+description "#{description}"
 version "0.1"
 
-%w{ #{@os} }.each do |os|
+%w{ #{os} }.each do |os|
   supports os
 end
 EOB
-    File.open("#{@name}/metadata.rb", 'w') do |f|
-      f << metadata
-    end
-    sh "touch #{@name}/recipes/default.rb"
   end
 end
-
