@@ -5,29 +5,6 @@ GIT_REPO=git://github.com/jodell/cookbooks.git
 ROOTDIR=$(cd `dirname $0` && cd .. && pwd)
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-if [ $OSTYPE = 'linux-gnu' ]; then
-  if [ -f /etc/debian_version ]; then
-    DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F=  '{ print $2 }'`
-    if [ $DIST = 'Ubuntu' ]; then
-      boot_debian
-    elif [ $DIST = 'Debian' ]; then
-      boot_debian
-    fi
-  elif [ -f /etc/redhat-release ]; then
-    DIST=`cat /etc/redhat-release |sed s/\ release.*//`
-    echo 'Redhat unsupported!'
-  fi
-elif [ `uname` = "Darwin" ]; then
-  echo "OSX unsupported!"
-else
-  echo 'Unsupported OS!';
-fi
-
-if [[ $EUID -ne 0 ]]; then
-  echo "Must be run as superuser"
-  exit 1
-fi
-
 install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
@@ -80,7 +57,31 @@ info () {
 
 boot_debian () {
   install_ruby
+  update_rubygems
   install_chef
   install_local_books
   info
 }
+
+if [[ $EUID -ne 0 ]]; then
+  echo "Must be run as superuser"
+  exit 1
+fi
+
+if [ $OSTYPE = 'linux-gnu' ]; then
+  if [ -f /etc/debian_version ]; then
+    DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F=  '{ print $2 }'`
+    if [ $DIST = 'Ubuntu' ]; then
+      boot_debian
+    elif [ $DIST = 'Debian' ]; then
+      boot_debian
+    fi
+  elif [ -f /etc/redhat-release ]; then
+    DIST=`cat /etc/redhat-release |sed s/\ release.*//`
+    echo 'Redhat unsupported!'
+  fi
+elif [ `uname` = "Darwin" ]; then
+  echo "OSX unsupported!"
+else
+  echo 'Unsupported OS!';
+fi
