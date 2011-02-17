@@ -35,7 +35,7 @@ fi
 CHEF_SOLO=`which chef-solo`
 if [ $? -ne 0 ]; then
   echo "Installing Chef"
-  gem install chef ohai --no-rdoc --no-ri --verbose
+  gem install chef rake bundler --no-rdoc --no-ri
 else
   echo "Chef installed, skipping"
 fi
