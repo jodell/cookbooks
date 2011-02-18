@@ -17,3 +17,13 @@ execute 'default editor' do
   only_if do platform?('ubuntu', 'debian') end
   not_if %{update-alternatives --query editor | grep "Value: /usr/bin/vim.basic"}
 end
+
+user node[:user] do
+  shell '/bin/bash'
+  home "/home/#{node[:user]}"
+  manage_home true
+end
+
+group 'sudo' do
+  members [ node[:user] ] if platform?('ubuntu', 'debian')
+end
