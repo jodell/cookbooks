@@ -44,7 +44,7 @@ install_local_books () {
   else
     mkdir -p /var/chef
     echo "Grabbing $GIT_REPO"
-    cd /var/chef && git clone $GIT_REPO && bundle install
+    git clone $GIT_REPO /var/chef/cookbooks && cd /var/chef/cookbooks && bundle install
   fi
 }
 
