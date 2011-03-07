@@ -17,15 +17,20 @@ install_ruby () {
 # Skipping this until it's required again.
 #
 update_rubygems () {
-  RUBYGEMS=rubygems-1.3.7
-  RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
-  echo "Installing $RUBYGEMS"
-  cd /tmp
-  wget $RUBYGEMS_URL
-  tar zxf $RUBYGEMS.tgz
-  cd $RUBYGEMS
-  ruby setup.rb
-  gem update --system
+  GEMCHECK=`which gem`
+  if [ $? -ne 0 ]; then
+    RUBYGEMS=rubygems-1.3.7
+    RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
+    echo "Installing $RUBYGEMS"
+    cd /tmp
+    wget $RUBYGEMS_URL
+    tar zxf $RUBYGEMS.tgz
+    cd $RUBYGEMS
+    ruby setup.rb
+    gem update --system
+  else
+    echo 'Rubygems found, skipping'
+  fi
 } 
 
 install_chef () {
