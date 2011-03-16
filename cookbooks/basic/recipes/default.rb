@@ -10,6 +10,7 @@ git-core
 screen
 time
 dnsutils
+lsof
 ).each { |p| package p }
 
 execute 'default editor' do
