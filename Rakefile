@@ -45,9 +45,12 @@ task :generate, :name do |t, args|
   email       = ENV['email']  || "jeffrey.odell@gmail.com"
   description = ENV['desc']   || "<desc>"
 
-  sh "mkdir -p cookbooks/#{args[:name]}/recipes && touch cookbooks/#{args[:name]}/recipes/default.rb"
+  dirs = %w(recipes attributes)
+  mkdirs = dirs.map { |dir| "cookbooks/#{args[:name]}/#{dir}" } * ' '
+  touchfiles = dirs.map { |dir| "cookbooks/#{args[:name]}/#{dir}/default.rb" } * ' '
+  sh "mkdir -p #{mkdirs} && touch #{touchfiles}"
   metadata =  File.open("cookbooks/#{args[:name]}/metadata.rb", 'w') do |f|
-    f <<-EOB
+    f << <<-EOB
 maintainer "#{maintainer}"
 maintainer_email "#{email}"
 description "#{description}"
