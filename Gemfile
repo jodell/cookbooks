@@ -1,4 +1,4 @@
 source :rubygems
 
-gem 'chef', '~>0.9.8'
+gem 'chef', '~>0.9.14'
 gem 'json'

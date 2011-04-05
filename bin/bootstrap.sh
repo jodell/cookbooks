@@ -75,7 +75,7 @@ fi
 
 if [ $OSTYPE = 'linux-gnu' ]; then
   if [ -f /etc/debian_version ]; then
-    DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F=  '{ print $2 }'`
+    DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F= '{ print $2 }'`
     if [ $DIST = 'Ubuntu' ]; then
       boot_debian
     elif [ $DIST = 'Debian' ]; then
