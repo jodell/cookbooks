@@ -1,6 +1,6 @@
 user node.webserver.user do
   shell '/bin/bash'
-  home "/home/#{node.user}"
+  home "/home/#{node.webserver.user}"
   manage_home true
 end
 
