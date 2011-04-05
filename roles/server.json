@@ -7,7 +7,7 @@
     "webserver",
     "openvpn"
   ],
-  "default_attributes": {
+  "override_attributes": {
     "webserver": {
       "user": "deploy"
     },
