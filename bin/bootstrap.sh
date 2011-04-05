@@ -15,23 +15,16 @@ install_ruby () {
   fi
 }
 
-# Skipping this until it's required again.
-#
 update_rubygems () {
-  GEMCHECK=`which gem`
-  if [ $? -ne 0 ]; then
-    RUBYGEMS=rubygems-1.5.2
-    RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.5.2.tgz
-    echo "Installing $RUBYGEMS"
-    cd /tmp
-    wget $RUBYGEMS_URL
-    tar zxf $RUBYGEMS.tgz
-    cd $RUBYGEMS
-    ruby setup.rb
-    #gem update --system
-  else
-    echo 'Rubygems found, skipping'
-  fi
+  RUBYGEMS=rubygems-1.5.2
+  RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.5.2.tgz
+  echo "Installing $RUBYGEMS"
+  cd /tmp
+  wget $RUBYGEMS_URL
+  tar zxf $RUBYGEMS.tgz
+  cd $RUBYGEMS
+  ruby setup.rb
+  #gem update --system
 } 
 
 install_chef () {
