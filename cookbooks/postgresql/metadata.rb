@@ -10,6 +10,11 @@ recipe            "postgresql::server", "Installs postgresql server packages, te
 recipe            "postgresql::redhat", "Installs postgresql server packages, redhat family style"
 recipe            "postgresql::server", "Installs postgresql server packages, debian family style"
 
+attribute "local_trust",·
+  :display_name => "Local Postgresql Trust Settings",
+  :description => "Trust settings for local connections",
+  :default => "ident"
+
 %w{rhel centos fedora ubuntu debian suse}.each do |os|
   supports os
 end

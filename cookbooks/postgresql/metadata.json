@@ -47,5 +47,18 @@
 
       ]
     },
-    "description": "Installs and configures postgresql for clients or servers"
+    "description": "Installs and configures postgresql for clients or servers",
+    "attributes": {
+      "apache": {
+        "display_name": "Local Postgresql Trust Settings",
+        "description": "Trust settings for local connections",
+        "default": "ident",
+        "type": "string",
+        "choice": [
+        ],
+        "calculated": false,
+        "required": "optional",
+        "recipes": [
+        ]
+      }
   }
