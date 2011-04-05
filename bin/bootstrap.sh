@@ -10,7 +10,8 @@ install_ruby () {
   if [ $? -ne 0 ]; then
     echo "Bootstrapping for the installation of rubygems & chef"
     apt-get install -y -q git-core curl build-essential binutils-doc gcc autoconf flex bison \
-      libreadline5-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev libopenssl-ruby1.8 ruby ruby-dev rubygems
+      libreadline5-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev libopenssl-ruby1.8 \
+      ruby ruby-dev rubygems
   fi
 }
 
@@ -19,15 +20,15 @@ install_ruby () {
 update_rubygems () {
   GEMCHECK=`which gem`
   if [ $? -ne 0 ]; then
-    RUBYGEMS=rubygems-1.3.7
-    RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
+    RUBYGEMS=rubygems-1.5.2
+    RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.5.2.tgz
     echo "Installing $RUBYGEMS"
     cd /tmp
     wget $RUBYGEMS_URL
     tar zxf $RUBYGEMS.tgz
     cd $RUBYGEMS
     ruby setup.rb
-    gem update --system
+    #gem update --system
   else
     echo 'Rubygems found, skipping'
   fi
@@ -37,7 +38,7 @@ install_chef () {
   CHEF_SOLO=`which chef-solo`
   if [ $? -ne 0 ]; then
     echo "Installing Chef"
-    gem install chef rake bundler --no-rdoc --no-ri
+    gem install rake bundler chef --no-rdoc --no-ri
   else
     echo "Chef installed, skipping"
   fi
@@ -55,9 +56,9 @@ install_local_books () {
 
 info () {
   echo "You should be able to try applying a chef role or recipe now:"
-  echo "> sudo chef-solo -c $ROOTDIR/solo.rb -j $ROOTDIR/roles/xen.json"
+  echo "> sudo chef-solo -c $MY_BOOKS/solo.rb -j $MY_BOOKS/roles/xen.json"
   echo "OR"
-  echo "> rake run[recipe_or_role]"
+  echo "> cd $MY_BOOKS && rake run[recipe_or_role]"
 }
 
 boot_debian () {
