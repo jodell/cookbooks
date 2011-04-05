@@ -4,13 +4,14 @@
   "recipes": [
     "basic",
     "postgresql::server",
-    "webserver"
+    "webserver",
+    "openvpn"
   ],
   "default_attributes": {
     "webserver": {
       "user": "deploy"
     },
-    "postgresql::server": {
+    "postgresql": {
       "local_trust": "trust"
     }
   }
