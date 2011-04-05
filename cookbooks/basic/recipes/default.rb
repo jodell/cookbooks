@@ -11,6 +11,7 @@ screen
 time
 dnsutils
 lsof
+tree
 ).each { |p| package p }
 
 execute 'default editor' do
@@ -23,8 +24,11 @@ user node[:user] do
   shell '/bin/bash'
   home "/home/#{node[:user]}"
   manage_home true
+  not_if { ENV['USER'] == 'root' }
 end
 
 group 'sudo' do
-  members [ node[:user] ] if platform?('ubuntu', 'debian')
+  members [ node[:user] ] 
+  not_if { `groups | grep sudo` || ENV['USER'] == 'root' }
+  only_if { platform?('ubuntu', 'debian') }
 end
