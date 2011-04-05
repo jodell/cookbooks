@@ -4,6 +4,7 @@ default[:webserver][:apps] = %w(
 app1
 app2
 )
+default[:webserver][:release_init_dir] = '0'
 default[:webserver][:app_dirs] = %w(
 releases/0/tmp
 releases/0/log

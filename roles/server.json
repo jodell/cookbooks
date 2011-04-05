@@ -2,8 +2,8 @@
   "recipes": [
     "basic",
     "postgresql",
-    "web-server"
+    "webserver"
   ],
-  "user": "deploy"
+  "user": "deploy",
   "postgresql:local_trust": "trust"
 }
