@@ -1,9 +1,17 @@
 {
+  "chef_type": "role",
+  "user": "deploy",
   "recipes": [
     "basic",
     "postgresql::server",
     "webserver"
   ],
-  "user": "deploy",
-  "postgresql:local_trust": "trust"
+  "default_attributes": {
+    "webserver": {
+      "user": "deploy"
+    },
+    "postgresql::server": {
+      "local_trust": "trust"
+    }
+  }
 }

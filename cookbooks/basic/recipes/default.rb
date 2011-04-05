@@ -24,7 +24,6 @@ user node[:user] do
   shell '/bin/bash'
   home "/home/#{node[:user]}"
   manage_home true
-  not_if { ENV['USER'] == 'root' }
 end
 
 group 'sudo' do
