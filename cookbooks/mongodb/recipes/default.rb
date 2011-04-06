@@ -50,7 +50,7 @@ template "/etc/init.d/mongodb" do
 end
 service "mongodb" do
   supports :start => true, :stop => true, :restart => true
-  action [ :enable, :start ]
+  action [ :enable ]
 end
 
 # create config directory and file
