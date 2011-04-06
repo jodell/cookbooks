@@ -6,7 +6,9 @@
     "postgresql::server",
     "webserver",
     "openvpn",
-    "mongodb"
+    "mongodb",
+    "memcached",
+    "apache2"
   ],
   "basic": {
     "user": "jodell",
