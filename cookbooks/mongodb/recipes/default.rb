@@ -49,8 +49,7 @@ template "/etc/init.d/mongodb" do
   mode 0755
 end
 service "mongodb" do
-  supports :start => true, :stop => true, :restart => true
-  action [ :enable ]
+  action :start
 end
 
 # create config directory and file
@@ -65,5 +64,5 @@ template "/etc/mongodb/mongodb.conf" do
   owner "root"
   group "root"
   mode 0744
-  notifies :start, resources(:service => "mongodb")
+  notifies :restart, resources(:service => "mongodb")
 end
