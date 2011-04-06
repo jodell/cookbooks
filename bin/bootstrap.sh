@@ -41,17 +41,16 @@ install_local_books () {
   if [[ -d $MY_BOOKS ]]; then
     echo "$MY_BOOKS already exists, skipping"
   else
-    mkdir -p /var/chef
     echo "Grabbing $GIT_REPO"
-    git clone $GIT_REPO /var/chef/cookbooks && cd /var/chef/cookbooks && bundle install
+    git clone $GIT_REPO $CHEF_HOME && cd $CHEF_HOME && bundle install
   fi
 }
 
 info () {
   echo "You should be able to try applying a chef role or recipe now:"
-  echo "> sudo chef-solo -c $MY_BOOKS/solo.rb -j $MY_BOOKS/roles/xen.json"
+  echo "> sudo chef-solo -c $CHEF_HOME/solo.rb -j $CHEF_HOME/roles/xen.json"
   echo "OR"
-  echo "> cd $MY_BOOKS && rake run[recipe_or_role]"
+  echo "> cd $CHEF_HOME && rake run[recipe_or_role]"
 }
 
 boot_debian () {
