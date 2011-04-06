@@ -1,9 +1,10 @@
 {
   "recipes": [
-    "basic",
-    "xvfb",
-    "selenium-rc"
+    "basic"
   ],
-  "user": "example_user"
+  "basic": {
+    "user": "joe_user",
+    "locale": "en_US.UTF-8"
+  }
 }
 

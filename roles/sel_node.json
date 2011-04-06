@@ -1,8 +1,17 @@
 {
   "recipes": [
     "basic",
+    "dots",
     "xvfb",
     "selenium-rc"
   ],
-  "user": "example_user"
+  "basic": {
+    "user": "jodell",
+    "locale": "en_US.UTF-8"
+  },
+  "dots": {
+    "gitroot": "/root/git",
+    "gitrepo": "git://github.com/jodell/dotsfiles.git",
+    "dotcmd": "rake"
+  }
 }
