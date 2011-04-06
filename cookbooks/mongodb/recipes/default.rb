@@ -48,9 +48,6 @@ template "/etc/init.d/mongodb" do
   group "root"
   mode 0755
 end
-service "mongodb" do
-  action :start
-end
 
 # create config directory and file
 directory "/etc/mongodb" do
@@ -59,10 +56,16 @@ directory "/etc/mongodb" do
   group "root"
   mode 0755
 end
+
 template "/etc/mongodb/mongodb.conf" do
   source "mongodb.conf.erb"
   owner "root"
   group "root"
   mode 0744
-  notifies :restart, resources(:service => "mongodb")
+  notifies :restart, "service[mongodb]"
+end
+
+service "mongodb" do
+  supports :start => true, :stop => true, :restart => true
+  action [ :enable, :start ]
 end
