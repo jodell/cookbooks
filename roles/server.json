@@ -1,18 +1,23 @@
 {
   "chef_type": "role",
-  "user": "deploy",
   "recipes": [
     "basic",
+    "dots",
     "postgresql::server",
     "webserver",
-    "openvpn"
+    "openvpn",
+    "mongodb"
   ],
-  "override_attributes": {
-    "webserver": {
-      "user": "deploy"
-    },
-    "postgresql": {
-      "local_trust": "trust"
-    }
-  }
+  "basic": {
+    "user": "jodell",
+    "locale": "en_US.UTF-8"
+  },
+  "postgresql": { "local_trust": "trust" },
+  "webserver": { "user": "deploy" },
+  "dots": {
+    "gitroot": "/root/git",
+    "gitrepo": "git://github.com/jodell/dotsfiles.git",
+    "dotcmd": "rake"
+  },
+  "mongodb": { "version": "1.6.5" }
 }
