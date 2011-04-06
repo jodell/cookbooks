@@ -1,7 +1,8 @@
 #!/bin/bash
 CHEF_HOME=/var/chef
 MY_BOOKS=$CHEF_HOME/cookbooks
-GIT_REPO=git://github.com/jodell/cookbooks.git
+REPO_DEFAULT=git://github.com/jodell/cookbooks.git
+GIT_REPO=${1:-$REPO_DEFAULT}
 ROOTDIR=$(cd `dirname $0` && cd .. && pwd)
 DIRECTORY=$(cd `dirname $0` && pwd)
 
