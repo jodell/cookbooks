@@ -5,3 +5,9 @@ package 'resolvconf' do
 end
 
 service 'networking'
+
+remote_file "/etc/openvpn/#{node.openvpn.cert_file}" do
+  source node.openvpn.cert_url
+  mode "0644"
+  not_if "test -f #{node.openvpn.cert_file}"
+end
