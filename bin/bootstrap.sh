@@ -10,8 +10,8 @@ install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
     echo "Bootstrapping for the installation of rubygems & chef"
-    apt-get install -y -q git-core curl build-essential binutils-doc gcc autoconf flex bison \
-      libreadline5-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev libopenssl-ruby1.8 \
+    apt-get update && apt-get install -y -q git-core curl build-essential binutils-doc gcc autoconf \
+      flex bison libreadline5-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev libopenssl-ruby1.8 \
       ruby ruby-dev rubygems
   fi
 }
