@@ -9,7 +9,7 @@ DIRECTORY=$(cd `dirname $0` && pwd)
 install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
-    echo "Bootstrapping for the installation of rubygems & chef"
+    echo "Bootstrapping for the installation of a system ruby & chef"
     apt-get update && apt-get install -y -q git-core curl build-essential binutils-doc gcc autoconf \
       flex bison libreadline5-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev libopenssl-ruby1.8 \
       ruby ruby-dev rubygems
@@ -17,16 +17,21 @@ install_ruby () {
 }
 
 update_rubygems () {
-  RUBYGEMS=rubygems-1.5.2
-  RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.5.2.tgz
-  echo "Installing $RUBYGEMS"
-  cd /tmp
-  wget $RUBYGEMS_URL
-  tar zxf $RUBYGEMS.tgz
-  cd $RUBYGEMS
-  ruby setup.rb
-  #gem update --system
-} 
+  RUBYGEMS_VER=1.5.2
+  RUBYGEMS="rubygems-${RUBYGEMS_VER}"
+  RUBYGEMS_URL="http://production.cf.rubygems.org/rubygems/${RUBYGEMS}.tgz"
+  GEMS=`gem --version | grep $RUBYGEMS_VER`
+  if [ $? -ne 0 ]; then
+    echo "Installing $RUBYGEMS"
+    cd /tmp
+    wget $RUBYGEMS_URL
+    tar zxf $RUBYGEMS.tgz
+    cd $RUBYGEMS
+    ruby setup.rb
+  else
+    echo "Rubygems at $RUBYGEMS_VER, skipping"
+  fi
+}
 
 install_chef () {
   CHEF_SOLO=`which chef-solo`
