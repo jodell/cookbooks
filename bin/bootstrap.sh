@@ -43,9 +43,10 @@ install_chef () {
   fi
 }
 
-install_local_books () {
-  if [[ -d $MY_BOOKS ]]; then
-    echo "$MY_BOOKS already exists, skipping"
+get_latest_books() {
+  if [[ -d $CHEF_HOME ]]; then
+    echo "Updating $CHEF_HOME"
+    cd $CHEF_HOME && git fetch && git pull && bundle install
   else
     echo "Grabbing $GIT_REPO"
     git clone $GIT_REPO $CHEF_HOME && cd $CHEF_HOME && bundle install
@@ -63,7 +64,7 @@ boot_debian () {
   install_ruby
   update_rubygems
   install_chef
-  install_local_books
+  get_latest_books
   info
 }
 
