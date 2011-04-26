@@ -6,7 +6,15 @@ GIT_REPO=${1:-$REPO_DEFAULT}
 ROOTDIR=$(cd `dirname $0` && cd .. && pwd)
 DIRECTORY=$(cd `dirname $0` && pwd)
 
-install_ruby () {
+# This is a hack for restored RS images having their their DNS/routes
+# pulled out from under them via resolvconf (I think).
+#
+restart_networking() {
+  # This may be more OS-specific than I think...
+  /etc/init.d/networking restart
+}
+
+install_ruby() {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
     echo "Bootstrapping for the installation of a system ruby & chef"
@@ -16,7 +24,7 @@ install_ruby () {
   fi
 }
 
-update_rubygems () {
+update_rubygems() {
   RUBYGEMS_VER=1.5.2
   RUBYGEMS="rubygems-${RUBYGEMS_VER}"
   RUBYGEMS_URL="http://production.cf.rubygems.org/rubygems/${RUBYGEMS}.tgz"
@@ -33,7 +41,7 @@ update_rubygems () {
   fi
 }
 
-install_chef () {
+install_chef() {
   CHEF_SOLO=`which chef-solo`
   if [ $? -ne 0 ]; then
     echo "Installing Chef"
@@ -53,14 +61,15 @@ get_latest_books() {
   fi
 }
 
-info () {
+info() {
   echo "You should be able to try applying a chef role or recipe now:"
   echo "> sudo chef-solo -c $CHEF_HOME/solo.rb -j $CHEF_HOME/roles/xen.json"
   echo "OR"
   echo "> cd $CHEF_HOME && rake run[recipe_or_role]"
 }
 
-boot_debian () {
+boot_debian() {
+  restart_networking
   install_ruby
   update_rubygems
   install_chef
