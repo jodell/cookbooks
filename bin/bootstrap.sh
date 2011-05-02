@@ -9,10 +9,11 @@ DIRECTORY=$(cd `dirname $0` && pwd)
 install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
-    echo "Bootstrapping for the installation of a system ruby & chef"
-    apt-get update && apt-get install -y -q git-core curl build-essential binutils-doc gcc autoconf \
-      flex bison libreadline5-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev libopenssl-ruby1.8 \
-      ruby ruby-dev rubygems
+    echo "Bootstrapping for the installation of rubygems & chef"
+    /usr/bin/aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
+      git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
+      libxslt-dev autoconf libc6-dev ncurses-dev ruby-dev ruby rubygems libopenssl-ruby1.8 flex gcc \
+      binutils-doc
   fi
 }
 
