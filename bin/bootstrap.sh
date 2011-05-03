@@ -10,7 +10,7 @@ install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
     echo "Bootstrapping for the installation of rubygems & chef"
-    /usr/bin/aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
+    apt-get update && aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
       git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
       libxslt-dev autoconf libc6-dev ncurses-dev ruby-dev ruby rubygems libopenssl-ruby1.8 flex gcc \
       binutils-doc
