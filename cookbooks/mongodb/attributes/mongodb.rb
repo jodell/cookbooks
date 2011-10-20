@@ -10,3 +10,4 @@ set_unless[:mongodb][:data_dir]     = "/var/lib/mongodb"
 set_unless[:mongodb][:log_dir]      = "/var/log/mongodb"
 set_unless[:mongodb][:config_dir]   = "/etc/mongodb"
 set_unless[:mongodb][:pid_dir]      = "/var/run"
+set_unless[:mongodb][:add_path]     = true

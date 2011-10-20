@@ -1,0 +1,3 @@
+PassengerRoot <%= node[:passenger_enterprise][:root_path] %>
+PassengerRuby <%= node.webserver.using_ree ? node[:ruby_enterprise][:ruby_bin] : "#{node[:ruby_mri][:install_path]}/bin/ruby" %>
+                 

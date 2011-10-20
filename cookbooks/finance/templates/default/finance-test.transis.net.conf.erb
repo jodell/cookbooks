@@ -1,0 +1,22 @@
+<VirtualHost *:80>
+  ServerName <%= node.finance.host %>
+  ServerAlias <%= node.finance.server_alias %>
+  DocumentRoot <%= node.webserver.srv_dir -%>/finance/public/
+  RailsEnv <%= node.webserver.rails_env %>
+
+  ErrorLog /var/log/apache2/<%= node.finance.server_alias -%>-error.log
+  CustomLog /var/log/apache2/<%= node.finance.server_alias -%>-access.log combined
+
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+  <Directory "<%= node.webserver.srv_dir -%>/finance/public">
+    Options FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+</VirtualHost>

@@ -16,7 +16,7 @@ task :bootstrap do
 end
 
 desc 'Run a role or recipe from this repo'
-task :run, :role_or_recipe, :needs => :bootstrap do |t, args|
+task :run, [:role_or_recipe] => :bootstrap do |t, args|
   role = args[:role_or_recipe].match(/\.(json|rb)$/) ? args[:role_or_recipe] : (args[:role_or_recipe] + '.json')
   if File.exist? "#{pwd}/roles/#{role}"
     run = "#{pwd}/roles/#{role}"
@@ -36,6 +36,11 @@ task :pkg do
   version = (File.read('VERSION').chomp.to_f + 0.1).to_s
   sh "cd cookbooks && tar czvf ../pkg/cookbooks-#{version}.tar.gz *"
   File.open('VERSION', 'w') { |f| f << "#{version}" }
+end
+
+desc 'self-update this repo'
+task :update do
+  sh "git fetch && git pull"
 end
 
 desc 'Generate a new templated recipe'

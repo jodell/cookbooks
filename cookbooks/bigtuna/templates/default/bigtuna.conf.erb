@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+  ServerName <%= node.bigtuna.host || Socket.gethostname %>
+  DocumentRoot <%= node.webserver.srv_dir -%>/<%= node.bigtuna.public_dir %>
+
+  RailsEnv <%= node.bigtuna.rails_env %>
+
+  <% for opt in node.bigtuna.passenger_opts.each %>
+  <%= opt %>
+  <% end %>
+
+  ErrorLog /var/log/apache2/<%= node.bigtuna.host -%>-error.log
+  CustomLog /var/log/apache2/<%= node.bigtuna.host -%>-access.log combined
+
+  RequestHeader set X-Request-Start "%t"
+
+  <Directory <%= node.webserver.srv_dir -%>/<%= node.bigtuna.public_dir %>>
+     Options Indexes MultiViews FollowSymLinks
+     AllowOverride all
+     Options -MultiViews
+  </Directory>
+
+  SetEnv RAILS_RELATIVE_URL_ROOT
+
+</VirtualHost>

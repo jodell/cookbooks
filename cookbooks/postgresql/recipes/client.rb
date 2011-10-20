@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+if node.postgresql.version == "9.0"
+  include_recipe "postgresql::server_ubuntu"
+end
+
 case node.platform
 when "ubuntu","debian"
   package "postgresql-client"

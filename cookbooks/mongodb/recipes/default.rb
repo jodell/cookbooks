@@ -49,6 +49,13 @@ template "/etc/init.d/mongodb" do
   mode 0755
 end
 
+template "/etc/profile.d/mongodb.sh" do
+  source "mongodb.sh.erb"
+  owner "root"
+  group "root"
+  mode 0755
+end if node.mongodb.add_path
+
 # create config directory and file
 directory "/etc/mongodb" do
   action :create
@@ -65,7 +72,10 @@ template "/etc/mongodb/mongodb.conf" do
   notifies :restart, "service[mongodb]"
 end
 
+mongo_pid_file = '/var/lib/mongodb/mongod.lock'
 service "mongodb" do
   supports :start => true, :stop => true, :restart => true
+  start_command '/etc/init.d/mongodb start &> /dev/null'
+  restart_command "test -f #{mongo_pid_file} && rm #{mongo_pid_file}; /etc/init.d/mongodb restart &> /dev/null"
   action [ :enable, :start ]
 end

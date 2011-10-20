@@ -1,0 +1,3 @@
+<%= node.webserver.using_ree ? "export PATH=#{node.ruby_enterprise.install_path}/bin:$PATH" : "" %>
+<%= node.webserver.rails_env ? 'export RAILS_ENV=' + node.webserver.rails_env : '' %>
+<%= node.webserver.rack_env ? 'export RACK_ENV=' + node.webserver.rack_env : '' %>

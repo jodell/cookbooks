@@ -10,7 +10,7 @@ install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
     echo "Bootstrapping for the installation of rubygems & chef"
-    apt-get update && aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
+    /usr/bin/aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
       git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
       libxslt-dev autoconf libc6-dev ncurses-dev ruby-dev ruby rubygems libopenssl-ruby1.8 flex gcc \
       binutils-doc
@@ -18,20 +18,15 @@ install_ruby () {
 }
 
 update_rubygems () {
-  RUBYGEMS_VER=1.5.2
-  RUBYGEMS="rubygems-${RUBYGEMS_VER}"
-  RUBYGEMS_URL="http://production.cf.rubygems.org/rubygems/${RUBYGEMS}.tgz"
-  GEMS=`gem --version | grep $RUBYGEMS_VER`
-  if [ $? -ne 0 ]; then
-    echo "Installing $RUBYGEMS"
-    cd /tmp
-    wget $RUBYGEMS_URL
-    tar zxf $RUBYGEMS.tgz
-    cd $RUBYGEMS
-    ruby setup.rb
-  else
-    echo "Rubygems at $RUBYGEMS_VER, skipping"
-  fi
+  RUBYGEMS=rubygems-1.5.2
+  RUBYGEMS_URL=http://production.cf.rubygems.org/rubygems/rubygems-1.5.2.tgz
+  echo "Installing $RUBYGEMS"
+  cd /tmp
+  wget $RUBYGEMS_URL
+  tar zxf $RUBYGEMS.tgz
+  cd $RUBYGEMS
+  ruby setup.rb
+  #gem update --system
 }
 
 install_chef () {
@@ -44,13 +39,12 @@ install_chef () {
   fi
 }
 
-get_latest_books() {
-  if [[ -d $CHEF_HOME ]]; then
-    echo "Updating $CHEF_HOME"
-    cd $CHEF_HOME && git fetch && git pull && bundle install
+install_local_books () {
+  if [[ -d $MY_BOOKS ]]; then
+    echo "$MY_BOOKS already exists, skipping"
   else
     echo "Grabbing $GIT_REPO"
-    git clone $GIT_REPO $CHEF_HOME && cd $CHEF_HOME && bundle install
+    git clone $GIT_REPO $CHEF_HOME && cd $CHEF_HOME && (bundle check || bundle install)
   fi
 }
 
@@ -65,7 +59,7 @@ boot_debian () {
   install_ruby
   update_rubygems
   install_chef
-  get_latest_books
+  install_local_books
   info
 }
 

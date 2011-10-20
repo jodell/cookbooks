@@ -59,3 +59,17 @@ else
   default[:postgresql][:version] = "8.4"
   set[:postgresql][:dir]            = "/etc/postgresql/#{node[:postgresql][:version]}/main"
 end
+
+default[:postgresql][:port] = '5432'
+default[:postgresql][:jdbc][:dir] = '/usr/share/java'
+default[:postgresql][:pg_config_opts] = {}
+default[:postgresql][:pg_hba_opts] = {}
+
+case node[:postgresql][:version]
+when '8.4'
+  default[:postgresql][:jdbc][:driver] = 'postgresql-8.4-702.jdbc4.jar'
+  default[:postgresql][:jdbc][:url] = "http://jdbc.postgresql.org/download/#{node.postgresql.jdbc.driver}"
+when /9\.(0|04)/
+  default[:postgresql][:jdbc][:driver] = 'postgresql-9.0-801.jdbc4.jar'
+  default[:postgresql][:jdbc][:url] = "http://jdbc.postgresql.org/download/#{node.postgresql.jdbc.driver}"
+end

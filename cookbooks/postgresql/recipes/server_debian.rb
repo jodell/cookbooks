@@ -24,12 +24,14 @@ when "8.3"
   node.default[:postgresql][:ssl] = "off"
 when "8.4"
   node.default[:postgresql][:ssl] = "true"
+when "9.0"
+  include_recipe "postgresql::server_ubuntu"
 end
 
-package "postgresql"
+package "postgresql-#{node[:postgresql][:version]}"
 
 service "postgresql" do
-  service_name "postgresql-#{node.postgresql.version}"
+  service_name "postgresql#{node[:postgresql][:version] == '9.0' ? '' : '-' + node.postgresql.version}"
   supports :restart => true, :status => true, :reload => true
   action :nothing
 end
@@ -39,7 +41,7 @@ template "#{node[:postgresql][:dir]}/pg_hba.conf" do
   owner "postgres"
   group "postgres"
   mode 0600
-  notifies :reload, resources(:service => "postgresql")
+  notifies :reload, resources(:service => "postgresql")#, :immediately
 end
 
 template "#{node[:postgresql][:dir]}/postgresql.conf" do
@@ -47,5 +49,17 @@ template "#{node[:postgresql][:dir]}/postgresql.conf" do
   owner "postgres"
   group "postgres"
   mode 0600
-  notifies :restart, resources(:service => "postgresql")
+  notifies :restart, resources(:service => "postgresql"), :immediately
+end
+
+node.postgresql.pg_config_opts.each do |cluster, values|
+  pg_conf cluster do
+    add_lines values
+  end
+end
+
+node.postgresql.pg_hba_opts.each do |cluster, values|
+  pg_hba cluster do
+    add_lines values
+  end
 end
