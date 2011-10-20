@@ -1,5 +1,5 @@
-include_recipe 'centro_base'
 include_recipe 'webserver'
+# base role
 
 ################################################################################
 # Gem package deps:

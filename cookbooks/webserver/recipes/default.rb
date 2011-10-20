@@ -1,5 +1,5 @@
 include_recipe 'openvpn'
-include_recipe 'centro_base'
+# base recipe
 
 # FIXME: Fix this shit
 include_recipe 'rvm' if node.webserver.using_rvm
@@ -38,7 +38,7 @@ node.webserver.apps.each do |app, meta|
     manage_home true
   end
 
-  centro_keyify app_user
+  #keyify task or recipe
 
   directory scm_dir do
     owner app_user

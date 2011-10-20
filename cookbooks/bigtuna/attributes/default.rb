@@ -2,6 +2,7 @@ default[:bigtuna][:apache][:enable] = true
 default[:bigtuna][:rails_env]       = 'development'
 default[:bigtuna][:public_dir]      = 'bigtuna/current/public'
 default[:bigtuna][:host]            = '<some host>'
+default[:bigtuna][:apps_dir]        = '/etc/some_dir'
 
 default[:bigtuna][:database][:adapter] = 'sqlite3'
 default[:bigtuna][:database][:host]    = 'localhost'

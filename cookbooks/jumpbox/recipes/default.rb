@@ -1,8 +1,8 @@
-include_recipe 'centro_base'
+# base role
 
 security_updates
 
-centro_keyify node.basic.user
+# keyify task/recipe
 
 directory "#{node.jumpbox.dsh.path}/group" do
   recursive true

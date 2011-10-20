@@ -5,9 +5,9 @@ srv_dir  = node[:webserver][:apps][:bigtuna][:srv_dir] || node.webserver.srv_dir
 app_user = node[:webserver][:apps][:bigtuna][:user]    || node.webserver.user
 
 # NOTE: SSH Keys
-# This is an intentional manual step for the moment.  Grab ~centro/.ssh/id_dsa* from an existing
-# CI box and drop them into the home of your CI user.  Then add that key to the deploy keys section
-# in your github project, ala: https://github.com/centro/pickle_factory/admin/keys.  Then make sure
+# This is an intentional manual step for the moment.  Create or add an ssh key from an existing box
+# and drop them into the home of your CI user.  Then add that key to the deploy keys section
+# in your github project, ala: https://github.com/user/some_project/admin/keys.  Then make sure
 # your project has a post-receive hook to hit the CI box you're setting up.
 
 # One-time deploy hack
@@ -25,7 +25,7 @@ end
 node.bigtuna.apps.each do |app|
   directory "#{srv_dir}/bigtuna/shared/#{app}"
 
-  Dir["/etc/centro/#{app}/*"].each do |file|
+  Dir["#{node.bigtuna.apps_dir}/*"].each do |file|
     link "#{srv_dir}/bigtuna/shared/#{app}/#{File.basename(file)}" do
       to file
       owner app_user
@@ -37,7 +37,7 @@ end
 %w(email bigtuna database).each do |config|
   local_config "#{srv_dir}/bigtuna/shared/config/#{config}.yml" do
     app 'bigtuna'
-    root '/etc/centro'
+    root node.bigtuna.apps_dir
     source "#{config}.yml.erb"
     vars = node['bigtuna'][(config == 'bigtuna' ? 'config' : config)]
     vars['env'] = node.bigtuna.rails_env

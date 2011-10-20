@@ -1,6 +1,6 @@
 include_recipe 'basic'
 include_recipe 'java'
-include_recipe 'centro_base'
+# base recipe
 
 security_updates
 package 'zip'
@@ -10,7 +10,7 @@ user node.pdi.user do
   home "/home/#{node.pdi.user}"
   manage_home true
 end
-centro_keyify node.pdi.user
+# keyify task or recipe
 
 directory node.pdi.scm_dir do
   recursive true
