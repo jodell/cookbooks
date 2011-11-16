@@ -10,10 +10,32 @@ install_ruby () {
   RUBY=`which ruby`
   if [ $? -ne 0 ]; then
     echo "Bootstrapping for the installation of rubygems & chef"
-    /usr/bin/aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
-      git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
-      libxslt-dev autoconf libc6-dev ncurses-dev ruby-dev ruby rubygems libopenssl-ruby1.8 flex gcc \
-      binutils-doc
+    if [ "$DIST" = 'debian' ]; then
+      /usr/bin/aptitude install -y -q build-essential bison openssl libreadline6 libreadline6-dev curl \
+        git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
+        libxslt-dev autoconf libc6-dev ncurses-dev ruby-dev ruby rubygems libopenssl-ruby1.8 flex gcc \
+        binutils-doc
+      update_rubygems
+    elif [ "$DIST" = 'Red Hat Enterprise Linux Server' ]; then
+      # FIXME - this is version specific
+      rpm -qa | grep epel-release-5-4 1>/dev/null || \
+        rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+      yum install -y curl vim-enhanced gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel \
+        libffi-devel openssl-devel make bzip2 autoconf automake libtool bison ruby-devel libxml2 libxml2-devel \
+        libxslt libxslt-devel git
+      install_rvm_ree
+    fi
+  fi
+}
+
+# This is unfortuantely necessary because redhat seems to only package ruby
+# 1.8.5 which is incompatible with chef.
+install_rvm_ree () {
+  bash < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
+  . /etc/profile.d/rvm.sh
+  RVM_REE=`rvm use ree`
+  if [ $RVM_REE -ne 0 ]; then
+    rvm install ree --default
   fi
 }
 
@@ -55,9 +77,8 @@ info () {
   echo "> cd $CHEF_HOME && rake run[recipe_or_role]"
 }
 
-boot_debian () {
+boot () {
   install_ruby
-  update_rubygems
   install_chef
   install_local_books
   info
@@ -71,14 +92,12 @@ fi
 if [ $OSTYPE = 'linux-gnu' ]; then
   if [ -f /etc/debian_version ]; then
     DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F= '{ print $2 }'`
-    if [ $DIST = 'Ubuntu' ]; then
-      boot_debian
-    elif [ $DIST = 'Debian' ]; then
-      boot_debian
-    fi
+    echo "Booting ${DIST}"
+    boot
   elif [ -f /etc/redhat-release ]; then
-    DIST=`cat /etc/redhat-release |sed s/\ release.*//`
-    echo 'Redhat unsupported!'
+    DIST=`cat /etc/redhat-release | sed s/\ release.*//`
+    echo "Booting ${DIST}"
+    boot
   fi
 elif [ `uname` = "Darwin" ]; then
   echo "OSX unsupported!"
