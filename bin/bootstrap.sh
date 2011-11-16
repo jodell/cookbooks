@@ -34,7 +34,7 @@ install_rvm_ree () {
   bash < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
   . /etc/profile.d/rvm.sh
   RVM_REE=`rvm use ree`
-  if [ $RVM_REE -ne 0 ]; then
+  if [ $? -ne 0 ]; then
     rvm install ree --default
   fi
 }
